@@ -11,9 +11,12 @@ import {
   created,
   internalServerError,
   type HttpRequestContract,
+  type HttpResponseContract,
 } from "@/app/contracts/http.protocol.ts";
 
-export const createUser = async ({ request }: HttpRequestContract) => {
+export const createUser = async ({
+  request,
+}: HttpRequestContract): Promise<HttpResponseContract> => {
   const { name, email, username, password } = await validateDto<CreateUserDto>(
     request,
     createUserSchemaValidation

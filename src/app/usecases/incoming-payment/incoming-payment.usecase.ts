@@ -16,9 +16,12 @@ import {
   notFound,
   ok,
   type HttpRequestContract,
+  type HttpResponseContract,
 } from "@/app/contracts/http.protocol.ts";
 
-export const incomingPayment = async ({ request }: HttpRequestContract) => {
+export const incomingPayment = async ({
+  request,
+}: HttpRequestContract): Promise<HttpResponseContract> => {
   const incomingPaymentDto = await validateDto<IncomingPaymentDto>(
     request,
     incomingPaymentSchemaValidation

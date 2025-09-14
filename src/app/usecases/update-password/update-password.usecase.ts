@@ -10,12 +10,13 @@ import {
   noContent,
   notFound,
   type HttpRequestContract,
+  type HttpResponseContract,
 } from "@/app/contracts/http.protocol.ts";
 
 export const updatePassword = async ({
   request,
-  user: authenticatedUser,
-}: HttpRequestContract) => {
+  authenticatedUser,
+}: HttpRequestContract): Promise<HttpResponseContract> => {
   const { id: userId } = authenticatedUser!;
 
   const { currentPassword, password } = await validateDto<UpdatePasswordDto>(

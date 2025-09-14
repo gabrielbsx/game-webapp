@@ -1,38 +1,42 @@
 import { getUserById } from "@/infra/database/repository/user.repository.ts";
-import { unauthorized } from "@/app/contracts/index.ts";
-import type { CustomFastifyRequest, FastifyReply } from "fastify";
 import jwt from "jsonwebtoken";
+import {
+  unauthorized,
+  type HttpRequestContract,
+} from "../contracts/http.protocol.ts";
 
-export const authenticationMiddleware = async (
-  request: CustomFastifyRequest,
-  reply: FastifyReply
-) => {
+export const authenticationMiddleware = async ({
+  headers,
+  setAuthenticatedUser,
+}: HttpRequestContract) => {
   try {
-    const authHeader = request.headers.authorization;
+    const authHeader = String(headers.authorization);
 
     if (!authHeader) {
-      return unauthorized(reply, "Unauthorized");
+      return unauthorized("Unauthorized");
     }
 
     const [, token] = authHeader.split(" ");
 
     if (!token) {
-      return unauthorized(reply, "Unauthorized");
+      return unauthorized("Unauthorized");
     }
 
     const decoded = jwt.decode(token);
 
     if (!decoded || typeof decoded === "string" || !decoded.sub) {
-      return unauthorized(reply, "Unauthorized");
+      return unauthorized("Unauthorized");
     }
 
     if (!(await getUserById(decoded.sub))) {
-      return unauthorized(reply, "Unauthorized");
+      return unauthorized("Unauthorized");
     }
 
-    request.user = { id: decoded.sub };
+    setAuthenticatedUser({
+      id: decoded.sub,
+    });
   } catch (error) {
-    request.log.error(error);
-    return unauthorized(reply, "Unauthorized");
+    console.error(error);
+    return unauthorized("Unauthorized");
   }
 };

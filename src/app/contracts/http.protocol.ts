@@ -1,5 +1,11 @@
 export type HttpRequestContract = {
-  user?: { id: string };
+  authenticatedUser: { id: string } | undefined;
+  setAuthenticatedUser: (user: { id: string }) => void;
+
+  headers: {
+    [key: string]: string | string[] | undefined;
+  };
+
   request: unknown;
 };
 

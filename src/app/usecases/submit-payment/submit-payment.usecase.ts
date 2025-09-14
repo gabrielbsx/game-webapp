@@ -1,10 +1,17 @@
 import { validateDto } from "@/shared/utilities/validate-dto.ts";
 import { type SubmitPaymentDto } from "./submit-payment.dto.ts";
 import { submitPaymentSchemaValidation } from "./submit-payment.validation.ts";
-import { ok, type HttpRequestContract } from "@/app/contracts/http.protocol.ts";
+import {
+  ok,
+  type HttpRequestContract,
+  type HttpResponseContract,
+} from "@/app/contracts/http.protocol.ts";
 
-export const submitPayment = async ({ request, user }: HttpRequestContract) => {
-  const { id: _userId } = user!;
+export const submitPayment = async ({
+  request,
+  authenticatedUser,
+}: HttpRequestContract): Promise<HttpResponseContract> => {
+  const { id: _userId } = authenticatedUser!;
 
   const _submitPaymentDto = validateDto<SubmitPaymentDto>(
     request,
