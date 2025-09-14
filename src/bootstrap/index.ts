@@ -1,5 +1,6 @@
 import Fastify from "fastify";
 import { routes } from "./routes.ts";
+import { middlewares } from "./middlewares.ts";
 
 const bootstrap = async () => {
   const app = Fastify({
@@ -7,6 +8,7 @@ const bootstrap = async () => {
   });
 
   routes(app);
+  middlewares(app);
 
   await app.listen({ port: 3000 });
 };

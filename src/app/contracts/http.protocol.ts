@@ -14,6 +14,13 @@ export type HttpResponseContract<T = unknown> = {
   data: T;
 };
 
+export type HttpMiddlewareContract<T = unknown> =
+  | {
+      statusCode: number;
+      data: T;
+    }
+  | { next: true };
+
 export const ok = <T>(data: T) => ({
   statusCode: 200,
   data,

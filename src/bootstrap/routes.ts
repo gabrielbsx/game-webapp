@@ -4,9 +4,7 @@ import { fastifyControllerWrapper } from "@/infra/http/fastify/controller.ts";
 import type { FastifyInstance } from "fastify";
 
 export const routes = (app: FastifyInstance) => {
-  // User routes
+  // User route
   app.post("/users", fastifyControllerWrapper(createUser));
   app.put("/users", fastifyControllerWrapper(updatePassword));
-
-  return app;
 };
