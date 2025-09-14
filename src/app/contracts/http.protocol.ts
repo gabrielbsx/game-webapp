@@ -14,12 +14,11 @@ export type HttpResponseContract<T = unknown> = {
   data: T;
 };
 
-export type HttpMiddlewareContract<T = unknown> =
-  | {
-      statusCode: number;
-      data: T;
-    }
-  | { next: true };
+export type HttpMiddlewareGoNext = { next: true };
+
+export type HttpMiddlewareResponseContract<T = unknown> =
+  | HttpResponseContract<T>
+  | HttpMiddlewareGoNext;
 
 export const ok = <T>(data: T) => ({
   statusCode: 200,
@@ -60,3 +59,9 @@ export const internalServerError = (message: string) => ({
   statusCode: 500,
   data: { error: message },
 });
+
+export const goNext = () => ({ next: true } as const);
+
+export const isGoNext = (
+  response: HttpMiddlewareResponseContract<unknown>
+): response is HttpMiddlewareGoNext => "next" in response && response.next;

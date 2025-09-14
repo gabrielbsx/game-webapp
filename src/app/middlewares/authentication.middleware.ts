@@ -1,15 +1,16 @@
 import { getUserById } from "@/infra/database/repository/user.repository.ts";
 import jwt from "jsonwebtoken";
 import {
+  goNext,
   unauthorized,
-  type HttpMiddlewareContract,
+  type HttpMiddlewareResponseContract,
   type HttpRequestContract,
 } from "../contracts/http.protocol.ts";
 
 export const authenticationMiddleware = async ({
   headers,
   setAuthenticatedUser,
-}: HttpRequestContract): Promise<HttpMiddlewareContract> => {
+}: HttpRequestContract): Promise<HttpMiddlewareResponseContract> => {
   try {
     const authHeader = String(headers.authorization);
 
@@ -37,7 +38,7 @@ export const authenticationMiddleware = async ({
       id: decoded.sub,
     });
 
-    return { next: true };
+    return goNext();
   } catch (error) {
     console.error(error);
     return unauthorized("Unauthorized");

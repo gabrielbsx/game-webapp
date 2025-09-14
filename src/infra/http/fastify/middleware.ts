@@ -1,6 +1,7 @@
-import type {
-  HttpMiddlewareContract,
-  HttpRequestContract,
+import {
+  isGoNext,
+  type HttpMiddlewareResponseContract,
+  type HttpRequestContract,
 } from "@/app/contracts/http.protocol.ts";
 import type { FastifyRequest, FastifyReply } from "fastify";
 
@@ -8,7 +9,7 @@ export const fastifyMiddlewareWrapper =
   (
     middleware: (
       request: HttpRequestContract
-    ) => Promise<HttpMiddlewareContract>
+    ) => Promise<HttpMiddlewareResponseContract>
   ) =>
   async (request: FastifyRequest, reply: FastifyReply) => {
     try {
@@ -21,15 +22,11 @@ export const fastifyMiddlewareWrapper =
         },
       });
 
-      if ("next" in response && response.next) {
+      if (isGoNext(response)) {
         return;
       }
 
-      if ("statusCode" in response && response.statusCode && response.data) {
-        return reply.status(response.statusCode).send(response.data);
-      }
-
-      return reply.status(500).send({ error: "Internal Server Error" });
+      return reply.status(response.statusCode).send(response.data);
     } catch (error) {
       request.log.error(error);
       return reply.status(500).send({ error: "Internal Server Error" });
