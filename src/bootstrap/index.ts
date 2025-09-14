@@ -1,21 +1,21 @@
 import Fastify from "fastify";
+import fastifyPrintRoutes from "fastify-print-routes";
 import { routes } from "./routes.js";
 import { middlewares } from "./middlewares.js";
 
 const bootstrap = async () => {
-  console.log("Starting server...");
-
   const app = Fastify({
-    logger: true,
+    logger: {
+      transport: {
+        target: "pino-pretty",
+      },
+    },
   });
 
-  console.log("Registering middlewares and routes...");
+  await app.register(fastifyPrintRoutes);
+
   routes(app);
-
-  console.log("Registering middlewares...");
   middlewares(app);
-
-  console.log("Starting server on port 3000...");
 
   await app.listen({ port: 3000 });
 };
