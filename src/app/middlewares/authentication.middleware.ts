@@ -1,5 +1,5 @@
 import { getUserById } from "@/infra/database/repository/user.repository.ts";
-import { unauthorized } from "@/shared/responses/index.ts";
+import { unauthorized } from "@/app/contracts/index.ts";
 import type { CustomFastifyRequest, FastifyReply } from "fastify";
 import jwt from "jsonwebtoken";
 

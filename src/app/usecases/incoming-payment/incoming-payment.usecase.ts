@@ -1,25 +1,26 @@
 import { validateDto } from "@/shared/utilities/validate-dto.ts";
-import type { FastifyReply, FastifyRequest } from "fastify";
 import { type IncomingPaymentDto } from "./incoming-payment.dto.ts";
 import { incomingPaymentSchemaValidation } from "./incoming-payment.validation.ts";
 import { isUsernameExistsInGame } from "@/core/behavior/is-username-exists-ingame.ts";
 import { db } from "@/infra/database/db.ts";
 import { paymentsTable } from "@/infra/database/schema/payment.schema.ts";
 import { eq } from "drizzle-orm";
-import { conflict, notFound, ok } from "@/shared/responses/index.ts";
 import { usersTable } from "@/infra/database/schema/user.schema.ts";
 import { PaymentStatus } from "@/core/entity/payment-status.ts";
 import { writeFileSync } from "fs";
 import { randomUUID } from "crypto";
 import { AntifraudStatus } from "@/core/entity/antifraud-status.ts";
 import { antifraudTable } from "@/infra/database/schema/antifraud.schema.ts";
+import {
+  conflict,
+  notFound,
+  ok,
+  type HttpRequestContract,
+} from "@/app/contracts/http.protocol.ts";
 
-export const incomingPayment = async (
-  request: FastifyRequest,
-  reply: FastifyReply
-) => {
+export const incomingPayment = async ({ request }: HttpRequestContract) => {
   const incomingPaymentDto = await validateDto<IncomingPaymentDto>(
-    request.body,
+    request,
     incomingPaymentSchemaValidation
   );
 
@@ -31,11 +32,11 @@ export const incomingPayment = async (
     .get();
 
   if (!payment) {
-    return notFound(reply, "Payment not found");
+    return notFound("Payment not found");
   }
 
   if (payment.payments.underAntifraudReview) {
-    return conflict(reply, "Payment under antifraud review");
+    return conflict("Payment under antifraud review");
   }
 
   if (
@@ -71,15 +72,15 @@ export const incomingPayment = async (
       .where(eq(usersTable.id, payment.users.id))
       .run();
 
-    return ok(reply, "Payment refunded");
+    return ok("Payment refunded");
   }
 
   if (payment.payments.status !== PaymentStatus.PENDING) {
-    return conflict(reply, "Payment already processed");
+    return conflict("Payment already processed");
   }
 
   if (payment.payments.amount !== incomingPaymentDto.amount) {
-    return conflict(reply, "Payment amount mismatch");
+    return conflict("Payment amount mismatch");
   }
 
   const behavior = {
@@ -128,8 +129,8 @@ export const incomingPayment = async (
   await behavior[payment.payments.status]();
 
   if (!isUsernameExistsInGame(payment.users.username)) {
-    return notFound(reply, "User not found in game");
+    return notFound("User not found in game");
   }
 
-  return ok(reply, "Payment verified");
+  return ok("Payment verified");
 };

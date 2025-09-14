@@ -1,17 +1,13 @@
-import { ok } from "@/shared/responses/index.ts";
 import { validateDto } from "@/shared/utilities/validate-dto.ts";
-import type { FastifyAuthenticatedRequest, FastifyReply } from "fastify";
 import { type SubmitPaymentDto } from "./submit-payment.dto.ts";
 import { submitPaymentSchemaValidation } from "./submit-payment.validation.ts";
+import { ok, type HttpRequestContract } from "@/app/contracts/http.protocol.ts";
 
-export const submitPayment = async (
-  request: FastifyAuthenticatedRequest,
-  reply: FastifyReply
-) => {
-  const { id: _userId } = request.user;
+export const submitPayment = async ({ request, user }: HttpRequestContract) => {
+  const { id: _userId } = user!;
 
   const _submitPaymentDto = validateDto<SubmitPaymentDto>(
-    request.body,
+    request,
     submitPaymentSchemaValidation
   );
 
@@ -23,5 +19,5 @@ export const submitPayment = async (
    * app_link: (checkout)
    * ...
    */
-  return ok(reply, "Payment submitted successfully");
+  return ok("Payment submitted successfully");
 };
