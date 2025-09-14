@@ -1,18 +1,18 @@
 import bcrypt from "bcrypt";
-import { db } from "@/infra/database/db.ts";
-import { usersTable } from "@/infra/database/schema/user.schema.ts";
-import { validateDto } from "@/shared/utilities/validate-dto.ts";
-import { type CreateUserDto } from "./create-user.dto.ts";
-import { createUserSchemaValidation } from "./create-user.validation.ts";
-import { isUsernameExistsInGame } from "@/core/behavior/is-username-exists-ingame.ts";
-import { getUserByUsername } from "@/infra/database/repository/user.repository.ts";
+import { db } from "@/infra/database/db.js";
+import { usersTable } from "@/infra/database/schema/user.schema.js";
+import { validateDto } from "@/shared/utilities/validate-dto.js";
+import { type CreateUserDto } from "./create-user.dto.js";
+import { createUserSchemaValidation } from "./create-user.validation.js";
+import { isUsernameExistsInGame } from "@/core/behavior/is-username-exists-ingame.js";
+import { getUserByUsername } from "@/infra/database/repository/user.repository.js";
 import {
   badRequest,
   created,
   internalServerError,
   type HttpRequestContract,
   type HttpResponseContract,
-} from "@/app/contracts/http.protocol.ts";
+} from "@/app/contracts/http.protocol.js";
 
 export const createUser = async ({
   request,

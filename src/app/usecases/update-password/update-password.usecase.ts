@@ -1,8 +1,8 @@
-import { validateDto } from "@/shared/utilities/validate-dto.ts";
-import { updatePasswordSchemaValidation } from "./update-password.validation.ts";
-import type { UpdatePasswordDto } from "./update-password.dto.ts";
-import { db } from "@/infra/database/db.ts";
-import { usersTable } from "@/infra/database/schema/user.schema.ts";
+import { validateDto } from "@/shared/utilities/validate-dto.js";
+import { updatePasswordSchemaValidation } from "./update-password.validation.js";
+import type { UpdatePasswordDto } from "./update-password.dto.js";
+import { db } from "@/infra/database/db.js";
+import { usersTable } from "@/infra/database/schema/user.schema.js";
 import { eq } from "drizzle-orm";
 import bcrypt from "bcrypt";
 import {
@@ -11,7 +11,7 @@ import {
   notFound,
   type HttpRequestContract,
   type HttpResponseContract,
-} from "@/app/contracts/http.protocol.ts";
+} from "@/app/contracts/http.protocol.js";
 
 export const updatePassword = async ({
   request,

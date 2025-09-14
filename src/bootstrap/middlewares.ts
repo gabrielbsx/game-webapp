@@ -1,5 +1,5 @@
-import { authenticationMiddleware } from "@/app/middlewares/authentication.middleware.ts";
-import { fastifyMiddlewareWrapper } from "@/infra/http/fastify/middleware.ts";
+import { authenticationMiddleware } from "@/app/middlewares/authentication.middleware.js";
+import { fastifyMiddlewareWrapper } from "@/infra/http/fastify/middleware.js";
 import type { FastifyInstance } from "fastify";
 
 export const middlewares = (app: FastifyInstance) => {

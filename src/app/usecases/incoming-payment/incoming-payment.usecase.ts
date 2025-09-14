@@ -1,23 +1,23 @@
-import { validateDto } from "@/shared/utilities/validate-dto.ts";
-import { type IncomingPaymentDto } from "./incoming-payment.dto.ts";
-import { incomingPaymentSchemaValidation } from "./incoming-payment.validation.ts";
-import { isUsernameExistsInGame } from "@/core/behavior/is-username-exists-ingame.ts";
-import { db } from "@/infra/database/db.ts";
-import { paymentsTable } from "@/infra/database/schema/payment.schema.ts";
+import { validateDto } from "@/shared/utilities/validate-dto.js";
+import { type IncomingPaymentDto } from "./incoming-payment.dto.js";
+import { incomingPaymentSchemaValidation } from "./incoming-payment.validation.js";
+import { isUsernameExistsInGame } from "@/core/behavior/is-username-exists-ingame.js";
+import { db } from "@/infra/database/db.js";
+import { paymentsTable } from "@/infra/database/schema/payment.schema.js";
 import { eq } from "drizzle-orm";
-import { usersTable } from "@/infra/database/schema/user.schema.ts";
-import { PaymentStatus } from "@/core/entity/payment-status.ts";
+import { usersTable } from "@/infra/database/schema/user.schema.js";
+import { PaymentStatus } from "@/core/entity/payment-status.js";
 import { writeFileSync } from "fs";
 import { randomUUID } from "crypto";
-import { AntifraudStatus } from "@/core/entity/antifraud-status.ts";
-import { antifraudTable } from "@/infra/database/schema/antifraud.schema.ts";
+import { AntifraudStatus } from "@/core/entity/antifraud-status.js";
+import { antifraudTable } from "@/infra/database/schema/antifraud.schema.js";
 import {
   conflict,
   notFound,
   ok,
   type HttpRequestContract,
   type HttpResponseContract,
-} from "@/app/contracts/http.protocol.ts";
+} from "@/app/contracts/http.protocol.js";
 
 export const incomingPayment = async ({
   request,

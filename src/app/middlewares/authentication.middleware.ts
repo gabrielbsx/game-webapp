@@ -1,11 +1,11 @@
-import { getUserById } from "@/infra/database/repository/user.repository.ts";
+import { getUserById } from "@/infra/database/repository/user.repository.js";
 import jwt from "jsonwebtoken";
 import {
   goNext,
   unauthorized,
   type HttpMiddlewareResponseContract,
   type HttpRequestContract,
-} from "../contracts/http.protocol.ts";
+} from "../contracts/http.protocol.js";
 
 export const authenticationMiddleware = async ({
   headers,

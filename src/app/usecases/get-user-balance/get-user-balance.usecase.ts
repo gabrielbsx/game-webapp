@@ -1,10 +1,10 @@
-import { getUserById } from "@/infra/database/repository/user.repository.ts";
+import { getUserById } from "@/infra/database/repository/user.repository.js";
 import {
   badRequest,
   ok,
   type HttpRequestContract,
   type HttpResponseContract,
-} from "@/app/contracts/http.protocol.ts";
+} from "@/app/contracts/http.protocol.js";
 
 export const getUserBalance = async ({
   // request,

@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
-import { db } from "../db.ts";
-import { usersTable } from "../schema/user.schema.ts";
+import { db } from "../db.js";
+import { usersTable } from "../schema/user.schema.js";
 
 export const getUserById = async (userId: string) =>
   db.select().from(usersTable).where(eq(usersTable.id, userId)).get();

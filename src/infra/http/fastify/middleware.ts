@@ -2,7 +2,7 @@ import {
   isGoNext,
   type HttpMiddlewareResponseContract,
   type HttpRequestContract,
-} from "@/app/contracts/http.protocol.ts";
+} from "@/app/contracts/http.protocol.js";
 import type { FastifyRequest, FastifyReply } from "fastify";
 
 export const fastifyMiddlewareWrapper =
