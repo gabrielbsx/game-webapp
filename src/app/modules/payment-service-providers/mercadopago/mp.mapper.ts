@@ -1,4 +1,4 @@
-import type { IncomingPaymentDto } from "@/app/usecases/incoming-payment/incoming-payment.dto.js";
+import type { IncomingPaymentDto } from "@/app/usecases/incoming-payment/incoming-payment.dto.ts";
 
 export const mercadoPagoToIncomingPaymentDto = (
   _data: unknown

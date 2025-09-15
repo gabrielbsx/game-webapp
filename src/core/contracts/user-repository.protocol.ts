@@ -1,5 +1,5 @@
-import type { User } from "../entity/user.js";
-import type { RepositoryContract } from "./repository.protocol.js";
+import type { User } from "../entity/user.ts";
+import type { RepositoryContract } from "./repository.protocol.ts";
 
 export type UserRepositoryContract = {
   getUserById(userId: string): Promise<User | null>;

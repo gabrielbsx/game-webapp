@@ -1,11 +1,11 @@
-import { validateDto } from "@/shared/utilities/validate-dto.js";
-import { type SubmitPaymentDto } from "./submit-payment.dto.js";
-import { submitPaymentSchemaValidation } from "./submit-payment.validation.js";
+import { validateDto } from "@/shared/utilities/validate-dto.ts";
+import { type SubmitPaymentDto } from "./submit-payment.dto.ts";
+import { submitPaymentSchemaValidation } from "./submit-payment.validation.ts";
 import {
   ok,
   type HttpRequestContract,
   type HttpResponseContract,
-} from "@/app/contracts/http.protocol.js";
+} from "@/app/contracts/http.protocol.ts";
 
 export const submitPayment = async ({
   request,

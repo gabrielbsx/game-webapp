@@ -1,5 +1,5 @@
 import { existsSync } from "fs";
-import { getUsernameSubDirectory } from "./get-username-subdirectory.js";
+import { getUsernameSubDirectory } from "./get-username-subdirectory.ts";
 
 export const isUsernameExistsInGame = (username: string): boolean => {
   const accountSubdirectory = getUsernameSubDirectory(username);

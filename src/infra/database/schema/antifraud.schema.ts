@@ -1,8 +1,8 @@
 import { randomUUID } from "crypto";
 import { relations } from "drizzle-orm";
 import { sqliteTable, text } from "drizzle-orm/sqlite-core";
-import { paymentsTable } from "./payment.schema.js";
-import type { AntifraudStatusType } from "@/core/entity/antifraud.js";
+import { paymentsTable } from "./payment.schema.ts";
+import type { AntifraudStatusType } from "@/core/entity/antifraud.ts";
 
 export const antifraudTable = sqliteTable("antifraud", {
   id: text("id")

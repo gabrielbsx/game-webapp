@@ -1,16 +1,16 @@
 import { randomUUID } from "crypto";
 import { relations } from "drizzle-orm";
 import { sqliteTable, text, real, int } from "drizzle-orm/sqlite-core";
-import { usersTable } from "./user.schema.js";
-import { type PaymentStatusType } from "@/core/entity/payment-status.js";
-import { antifraudTable } from "./antifraud.schema.js";
+import { usersTable } from "./user.schema.ts";
+import { antifraudTable } from "./antifraud.schema.ts";
+import type { PaymentStatusType } from "@/core/entity/payment.ts";
 
 export const paymentsTable = sqliteTable("payments", {
   id: text("id")
     .$defaultFn(() => randomUUID())
     .primaryKey(),
   amount: real("amount").notNull(),
-  currency: real("currency").notNull(),
+  currency: text("currency").notNull(),
   status: text("status").$type<PaymentStatusType>().notNull(),
   paymentProviderReferenceId: text("psp_reference_id"),
   userId: text("user_id").notNull(),
@@ -21,6 +21,10 @@ export const paymentsTable = sqliteTable("payments", {
   })
     .notNull()
     .$defaultFn(() => false),
+
+  processedAt: text("processed_at"),
+
+  externalReference: text("external_reference").notNull().unique(),
 
   // Timestamps
   createdAt: text("created_at")

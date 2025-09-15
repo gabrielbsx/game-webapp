@@ -3,8 +3,8 @@ import {
   ok,
   type HttpRequestContract,
   type HttpResponseContract,
-} from "@/app/contracts/http.protocol.js";
-import { userRepository } from "@/infra/database/repository/user.repository.js";
+} from "@/app/contracts/http.protocol.ts";
+import { userRepository } from "@/infra/database/repository/user.repository.ts";
 
 export const getUserBalance = async ({
   // request,

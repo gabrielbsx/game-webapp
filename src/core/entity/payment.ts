@@ -1,5 +1,4 @@
-import type { Entity } from "./entity.js";
-import type { User } from "./user.js";
+import type { Entity } from "./entity.ts";
 
 export const PaymentStatus = {
   PENDING: "pending",
@@ -13,9 +12,13 @@ export type PaymentStatusType =
 
 export type Payment = Readonly<{
   status: PaymentStatusType;
-  user: User;
+  // user: User;
+  userId: string;
   amount: number;
+  currency: string;
   externalReference: string;
+  underAntifraudReview: boolean;
+  paymentProviderReferenceId: string | null;
   processedAt: Date | null;
 }> &
   Entity;

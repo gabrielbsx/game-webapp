@@ -1,7 +1,7 @@
 import Fastify from "fastify";
 import fastifyPrintRoutes from "fastify-print-routes";
-import { routes } from "./routes.js";
-import { middlewares } from "./middlewares.js";
+import { routes } from "./routes.ts";
+import { middlewares } from "./middlewares.ts";
 
 const bootstrap = async () => {
   const app = Fastify({

@@ -1,7 +1,7 @@
 import type { AnySQLiteColumn, SQLiteTable } from "drizzle-orm/sqlite-core";
-import { db } from "../db.js";
+import { db } from "../db.ts";
 import { eq, type InferInsertModel, type InferSelectModel } from "drizzle-orm";
-import type { RepositoryContract } from "@/core/contracts/repository.protocol.js";
+import type { RepositoryContract } from "@/core/contracts/repository.protocol.ts";
 
 type CustomSQLiteTable = SQLiteTable & {
   id: AnySQLiteColumn;

@@ -1,5 +1,5 @@
-import type { Entity } from "./entity.js";
-import type { Payment } from "./payment.js";
+import type { Entity } from "./entity.ts";
+import type { Payment } from "./payment.ts";
 
 export const AntifraudStatus = {
   PENDING: "pending",

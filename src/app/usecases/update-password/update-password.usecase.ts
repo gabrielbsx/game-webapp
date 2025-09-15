@@ -1,8 +1,8 @@
-import { validateDto } from "@/shared/utilities/validate-dto.js";
-import { updatePasswordSchemaValidation } from "./update-password.validation.js";
-import type { UpdatePasswordDto } from "./update-password.dto.js";
-import { db } from "@/infra/database/db.js";
-import { usersTable } from "@/infra/database/schema/user.schema.js";
+import { validateDto } from "@/shared/utilities/validate-dto.ts";
+import { updatePasswordSchemaValidation } from "./update-password.validation.ts";
+import type { UpdatePasswordDto } from "./update-password.dto.ts";
+import { db } from "@/infra/database/db.ts";
+import { usersTable } from "@/infra/database/schema/user.schema.ts";
 import { eq } from "drizzle-orm";
 import bcrypt from "bcrypt";
 import {
@@ -11,8 +11,9 @@ import {
   notFound,
   type HttpRequestContract,
   type HttpResponseContract,
-} from "@/app/contracts/http.protocol.js";
-import { isUsernameExistsInGame } from "@/core/behavior/is-username-exists-ingame.js";
+} from "@/app/contracts/http.protocol.ts";
+import { isUsernameExistsInGame } from "@/core/behavior/is-username-exists-ingame.ts";
+import { userRepository } from "@/infra/database/repository/user.repository.ts";
 
 export const updatePassword = async ({
   request,
@@ -25,11 +26,7 @@ export const updatePassword = async ({
     updatePasswordSchemaValidation
   );
 
-  const user = await db
-    .select()
-    .from(usersTable)
-    .where(eq(usersTable.id, userId))
-    .get();
+  const user = await userRepository.getUserById(userId);
 
   if (!user) {
     return notFound("User not found");

@@ -1,4 +1,4 @@
-import { type Entity } from "./entity.js";
+import { type Entity } from "./entity.ts";
 
 export type User = Readonly<{
   name: string;
