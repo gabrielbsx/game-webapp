@@ -3,10 +3,6 @@ import {
   type HttpRequestContract,
   type HttpResponseContract,
 } from "@/app/contracts/http.contract.ts";
-import { PaymentStatus } from "@/core/entity/payment.ts";
-import { AntifraudStatus } from "@/core/entity/antifraud.ts";
-import { antifraudRepository } from "@/infra/database/repository/antifraud.repository.ts";
-import { userRepository } from "@/infra/database/repository/user.repository.ts";
 import { paymentRepository } from "@/infra/database/sqlite/repository/payment.repository.ts";
 import { gameAccountRepository } from "@/infra/database/fs/repository/game-account.repository.ts";
 import { PaymentAlreadyProcessedException } from "@/core/errors/payment-already-processed.exception.ts";
@@ -14,6 +10,10 @@ import { PaymentAmountMismatchException } from "@/core/errors/payment-amount-mis
 import { GameAccountNotFoundException } from "@/core/errors/game-account-not-found.exception.ts";
 import { PaymentUnderAntifraudReviewException } from "@/core/errors/payment-under-antifraud-review.exception.ts";
 import { incomingPaymentValidation } from "./incoming-payment.validation.ts";
+import { PaymentStatus } from "@/core/entities/payment.ts";
+import { userRepository } from "@/infra/database/sqlite/repository/user.repository.ts";
+import { antifraudRepository } from "@/infra/database/sqlite/repository/antifraud.repository.ts";
+import { AntifraudStatus } from "@/core/entities/antifraud.ts";
 
 export const incomingPayment = async ({
   request,
