@@ -1,6 +1,4 @@
-import { validateDto } from "@/infra/validation/zod-validation.ts";
-import { updatePasswordSchemaValidation } from "./update-password.validation.ts";
-import type { UpdatePasswordDto } from "./update-password.dto.ts";
+import { updatePasswordValidation } from "./update-password.validation.ts";
 import {
   noContent,
   type HttpRequestContract,
@@ -18,9 +16,8 @@ export const updatePassword = async ({
 }: HttpRequestContract): Promise<HttpResponseContract> => {
   const { id: userId } = authenticatedUser!;
 
-  const { currentPassword, password } = await validateDto<UpdatePasswordDto>(
-    request,
-    updatePasswordSchemaValidation
+  const { currentPassword, password } = await updatePasswordValidation.validate(
+    request
   );
 
   const user = await userRepository.findByIdOrThrow(userId);
