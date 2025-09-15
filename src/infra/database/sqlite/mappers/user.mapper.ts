@@ -11,7 +11,7 @@ export const userMapper: RepositoryMapper<typeof usersTable, User> = {
     username: dbModel.username,
     password: dbModel.password,
     balance: dbModel.balance ?? 0,
-    inAnalysis: dbModel.inAnalysis === "true",
+    inAnalysis: dbModel.inAnalysis,
     createdAt: new Date(dbModel.createdAt),
     updatedAt: dbModel.updatedAt ? new Date(dbModel.updatedAt) : undefined,
     deletedAt: dbModel.deletedAt ? new Date(dbModel.deletedAt) : undefined,
@@ -24,7 +24,7 @@ export const userMapper: RepositoryMapper<typeof usersTable, User> = {
     username: domainModel.username,
     password: domainModel.password,
     balance: domainModel.balance,
-    inAnalysis: domainModel.inAnalysis ? "true" : "false",
+    inAnalysis: domainModel.inAnalysis,
     createdAt: domainModel.createdAt.toISOString(),
     updatedAt: domainModel.updatedAt
       ? domainModel.updatedAt.toISOString()
@@ -48,7 +48,7 @@ export const userMapper: RepositoryMapper<typeof usersTable, User> = {
     if (domainModel.balance !== undefined)
       dbModel.balance = domainModel.balance;
     if (domainModel.inAnalysis !== undefined)
-      dbModel.inAnalysis = domainModel.inAnalysis ? "true" : "false";
+      dbModel.inAnalysis = domainModel.inAnalysis;
     if (domainModel.createdAt !== undefined)
       dbModel.createdAt = domainModel.createdAt.toISOString();
     if (domainModel.updatedAt !== undefined)

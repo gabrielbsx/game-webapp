@@ -1,6 +1,6 @@
 import { randomUUID } from "crypto";
 import { relations } from "drizzle-orm";
-import { real, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { int, real, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { paymentsTable } from "./payment.schema.ts";
 
 export const usersTable = sqliteTable("users", {
@@ -17,10 +17,9 @@ export const usersTable = sqliteTable("users", {
   createdAt: text("created_at")
     .notNull()
     .$default(() => new Date().toISOString()),
-  inAnalysis: text("in_analysis")
+  inAnalysis: int("in_analysis", { mode: "boolean" })
     .notNull()
-    .$defaultFn(() => "false")
-    .$type<"true" | "false">(),
+    .$defaultFn(() => false),
   updatedAt: text("updated_at"),
   deletedAt: text("deleted_at"),
 });
