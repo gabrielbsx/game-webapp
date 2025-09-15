@@ -6,10 +6,8 @@ import { db } from "@/infra/database/db.js";
 import { paymentsTable } from "@/infra/database/schema/payment.schema.js";
 import { eq } from "drizzle-orm";
 import { usersTable } from "@/infra/database/schema/user.schema.js";
-import { PaymentStatus } from "@/core/entity/payment-status.js";
 import { writeFileSync } from "fs";
 import { randomUUID } from "crypto";
-import { AntifraudStatus } from "@/core/entity/antifraud-status.js";
 import { antifraudTable } from "@/infra/database/schema/antifraud.schema.js";
 import {
   conflict,
@@ -18,6 +16,8 @@ import {
   type HttpRequestContract,
   type HttpResponseContract,
 } from "@/app/contracts/http.protocol.js";
+import { PaymentStatus } from "@/core/entity/payment.js";
+import { AntifraudStatus } from "@/core/entity/antifraud.js";
 
 export const incomingPayment = async ({
   request,

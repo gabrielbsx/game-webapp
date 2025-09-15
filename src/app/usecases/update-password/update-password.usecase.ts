@@ -12,6 +12,7 @@ import {
   type HttpRequestContract,
   type HttpResponseContract,
 } from "@/app/contracts/http.protocol.js";
+import { isUsernameExistsInGame } from "@/core/behavior/is-username-exists-ingame.js";
 
 export const updatePassword = async ({
   request,
@@ -32,6 +33,10 @@ export const updatePassword = async ({
 
   if (!user) {
     return notFound("User not found");
+  }
+
+  if (!isUsernameExistsInGame(user.username)) {
+    return conflict("An error occurred");
   }
 
   const passwordHashed = await bcrypt.hash(password, await bcrypt.genSalt());

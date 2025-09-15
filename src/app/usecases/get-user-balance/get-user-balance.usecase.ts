@@ -1,10 +1,10 @@
-import { getUserById } from "@/infra/database/repository/user.repository.js";
 import {
   badRequest,
   ok,
   type HttpRequestContract,
   type HttpResponseContract,
 } from "@/app/contracts/http.protocol.js";
+import { userRepository } from "@/infra/database/repository/user.repository.js";
 
 export const getUserBalance = async ({
   // request,
@@ -12,11 +12,13 @@ export const getUserBalance = async ({
 }: HttpRequestContract): Promise<HttpResponseContract> => {
   const { id: userId } = authenticatedUser!;
 
-  const isUserExists = await getUserById(userId);
+  const user = await userRepository.getUserById(userId);
 
-  if (!isUserExists) {
+  if (!user) {
     return badRequest("User not found");
   }
 
-  return ok({ balance: 0 });
+  const { balance } = user;
+
+  return ok({ balance });
 };

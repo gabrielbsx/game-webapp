@@ -7,7 +7,9 @@
   "scripts": {
     "start:dev": "node --watch --import tsx --env-file=.env.dev src/bootstrap/index.ts",
     "start:prod": "node --env-file=.env.prod dist/bootstrap/index.js",
-    "build": "tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json"
+    "build": "tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
+    "premigrate": "tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
+    "migrate": "drizzle-kit push"
   },
   "author": "gabrielbsx",
   "license": "ISC",

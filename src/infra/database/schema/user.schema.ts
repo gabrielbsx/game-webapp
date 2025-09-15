@@ -1,6 +1,6 @@
 import { randomUUID } from "crypto";
 import { relations } from "drizzle-orm";
-import { sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { real, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { paymentsTable } from "./payment.schema.js";
 
 export const usersTable = sqliteTable("users", {
@@ -11,6 +11,9 @@ export const usersTable = sqliteTable("users", {
   email: text("email").notNull(),
   username: text("username").notNull().unique(),
   password: text("password").notNull(),
+  balance: real("balance")
+    .notNull()
+    .$defaultFn(() => 0),
   createdAt: text("created_at")
     .notNull()
     .$default(() => new Date().toISOString()),
@@ -23,5 +26,5 @@ export const usersTable = sqliteTable("users", {
 });
 
 export const userRelations = relations(usersTable, ({ many }) => ({
-  payments: many(paymentsTable),
+  payment: many(paymentsTable),
 }));
