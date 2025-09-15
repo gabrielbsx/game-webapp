@@ -3,7 +3,7 @@ import { db } from "../db.ts";
 import { usersTable } from "../schema/user.schema.ts";
 import { makeRepository } from "./abstract.repository.ts";
 import { userMapper } from "../mappers/user.mapper.ts";
-import type { UserRepositoryContract } from "@/core/contracts/user-repository.protocol.ts";
+import type { UserRepositoryContract } from "@/core/contracts/user-repository.contract.ts";
 
 export const userRepository: UserRepositoryContract = {
   ...makeRepository(usersTable, userMapper),
