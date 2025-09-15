@@ -1,4 +1,4 @@
-import { validation } from "@/infra/validation/validate-dto.ts";
+import { zodValidation } from "@/infra/validation/zod-validation.ts";
 import z from "zod";
 import type { IncomingPaymentDto } from "./incoming-payment.dto.ts";
 
@@ -8,6 +8,6 @@ const incomingPaymentSchemaValidation = z.object({
   externalReference: z.string().min(1).max(255),
 });
 
-export const incomingPaymentValidation = validation<IncomingPaymentDto>(
+export const incomingPaymentValidation = zodValidation<IncomingPaymentDto>(
   incomingPaymentSchemaValidation
 );

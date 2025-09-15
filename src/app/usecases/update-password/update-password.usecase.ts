@@ -1,4 +1,4 @@
-import { validateDto } from "@/infra/validation/validate-dto.ts";
+import { validateDto } from "@/infra/validation/zod-validation.ts";
 import { updatePasswordSchemaValidation } from "./update-password.validation.ts";
 import type { UpdatePasswordDto } from "./update-password.dto.ts";
 import {

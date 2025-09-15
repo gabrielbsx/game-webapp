@@ -1,4 +1,4 @@
-import { validation } from "@/infra/validation/validate-dto.ts";
+import { zodValidation } from "@/infra/validation/zod-validation.ts";
 import z from "zod";
 import type { SubmitPaymentDto } from "./submit-payment.dto.ts";
 
@@ -12,6 +12,6 @@ const submitPaymentSchemaValidation = z.object({
   }),
 });
 
-export const submitPaymentValidation = validation<SubmitPaymentDto>(
+export const submitPaymentValidation = zodValidation<SubmitPaymentDto>(
   submitPaymentSchemaValidation
 );

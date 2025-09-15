@@ -1,4 +1,4 @@
-import { validation } from "@/infra/validation/validate-dto.ts";
+import { zodValidation } from "@/infra/validation/zod-validation.ts";
 import z from "zod";
 import type { CreateUserDto } from "./create-user.dto.ts";
 
@@ -17,6 +17,6 @@ const createUserSchemaValidation = z.object({
     .regex(/^[a-zA-Z0-9_]+$/),
 });
 
-export const createUserValidation = validation<CreateUserDto>(
+export const createUserValidation = zodValidation<CreateUserDto>(
   createUserSchemaValidation
 );
