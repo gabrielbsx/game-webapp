@@ -1,6 +1,8 @@
+import { validation } from "@/infra/validation/validate-dto.ts";
 import z from "zod";
+import type { SubmitPaymentDto } from "./submit-payment.dto.ts";
 
-export const submitPaymentSchemaValidation = z.object({
+const submitPaymentSchemaValidation = z.object({
   amount: z.number().positive(),
   currency: z.string().length(3),
 
@@ -9,3 +11,7 @@ export const submitPaymentSchemaValidation = z.object({
     name: z.string().min(2).max(100),
   }),
 });
+
+export const submitPaymentValidation = validation<SubmitPaymentDto>(
+  submitPaymentSchemaValidation
+);

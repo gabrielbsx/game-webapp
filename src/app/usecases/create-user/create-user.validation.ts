@@ -1,6 +1,8 @@
+import { validation } from "@/infra/validation/validate-dto.ts";
 import z from "zod";
+import type { CreateUserDto } from "./create-user.dto.ts";
 
-export const createUserSchemaValidation = z.object({
+const createUserSchemaValidation = z.object({
   name: z.string().min(2),
   email: z.email(),
   username: z
@@ -14,3 +16,7 @@ export const createUserSchemaValidation = z.object({
     .max(12)
     .regex(/^[a-zA-Z0-9_]+$/),
 });
+
+export const createUserValidation = validation<CreateUserDto>(
+  createUserSchemaValidation
+);

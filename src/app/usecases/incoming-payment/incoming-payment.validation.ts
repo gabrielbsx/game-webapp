@@ -1,7 +1,13 @@
+import { validation } from "@/infra/validation/validate-dto.ts";
 import z from "zod";
+import type { IncomingPaymentDto } from "./incoming-payment.dto.ts";
 
-export const incomingPaymentSchemaValidation = z.object({
+const incomingPaymentSchemaValidation = z.object({
   amount: z.number().positive(),
   status: z.enum(["pending", "completed", "refunded", "failed"]),
   externalReference: z.string().min(1).max(255),
 });
+
+export const incomingPaymentValidation = validation<IncomingPaymentDto>(
+  incomingPaymentSchemaValidation
+);

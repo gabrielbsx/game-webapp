@@ -1,6 +1,4 @@
-import { validateDto } from "@/infra/validation/validate-dto.ts";
-import { type CreateUserDto } from "./create-user.dto.ts";
-import { createUserSchemaValidation } from "./create-user.validation.ts";
+import { createUserValidation } from "./create-user.validation.ts";
 import {
   created,
   type HttpRequestContract,
@@ -14,10 +12,8 @@ import { AccountAlreadyExistsException } from "@/core/errors/account-already-exi
 export const createUser = async ({
   request,
 }: HttpRequestContract): Promise<HttpResponseContract> => {
-  const { name, email, username, password } = await validateDto<CreateUserDto>(
-    request,
-    createUserSchemaValidation
-  );
+  const { name, email, username, password } =
+    await createUserValidation.validate(request);
 
   if (
     (await gameAccountRepository.isUsernameExists(username)) ||

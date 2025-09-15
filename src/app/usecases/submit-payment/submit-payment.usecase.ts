@@ -1,6 +1,4 @@
-import { validateDto } from "@/infra/validation/validate-dto.ts";
-import { type SubmitPaymentDto } from "./submit-payment.dto.ts";
-import { submitPaymentSchemaValidation } from "./submit-payment.validation.ts";
+import { submitPaymentValidation } from "./submit-payment.validation.ts";
 import {
   ok,
   type HttpRequestContract,
@@ -13,10 +11,7 @@ export const submitPayment = async ({
 }: HttpRequestContract): Promise<HttpResponseContract> => {
   const { id: _userId } = authenticatedUser!;
 
-  const _submitPaymentDto = validateDto<SubmitPaymentDto>(
-    request,
-    submitPaymentSchemaValidation
-  );
+  const _submitPaymentDto = await submitPaymentValidation.validate(request);
 
   // TODO: request to get KYC
 

@@ -1,6 +1,3 @@
-import { validateDto } from "@/infra/validation/validate-dto.ts";
-import { type IncomingPaymentDto } from "./incoming-payment.dto.ts";
-import { incomingPaymentSchemaValidation } from "./incoming-payment.validation.ts";
 import {
   ok,
   type HttpRequestContract,
@@ -16,14 +13,12 @@ import { PaymentAlreadyProcessedException } from "@/core/errors/payment-already-
 import { PaymentAmountMismatchException } from "@/core/errors/payment-amount-mismatch.exception.ts";
 import { GameAccountNotFoundException } from "@/core/errors/game-account-not-found.exception.ts";
 import { PaymentUnderAntifraudReviewException } from "@/core/errors/payment-under-antifraud-review.exception.ts";
+import { incomingPaymentValidation } from "./incoming-payment.validation.ts";
 
 export const incomingPayment = async ({
   request,
 }: HttpRequestContract): Promise<HttpResponseContract> => {
-  const incomingPaymentDto = await validateDto<IncomingPaymentDto>(
-    request,
-    incomingPaymentSchemaValidation
-  );
+  const incomingPaymentDto = await incomingPaymentValidation.validate(request);
 
   const payment = await paymentRepository.findByExternalReferenceOrThrow(
     incomingPaymentDto.externalReference
