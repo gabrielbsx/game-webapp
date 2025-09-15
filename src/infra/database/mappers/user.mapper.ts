@@ -13,8 +13,8 @@ export const userMapper: RepositoryMapper<typeof usersTable, User> = {
     balance: dbModel.balance ?? 0,
     inAnalysis: dbModel.inAnalysis === "true",
     createdAt: new Date(dbModel.createdAt),
-    updatedAt: dbModel.updatedAt ? new Date(dbModel.updatedAt) : null,
-    deletedAt: dbModel.deletedAt ? new Date(dbModel.deletedAt) : null,
+    updatedAt: dbModel.updatedAt ? new Date(dbModel.updatedAt) : undefined,
+    deletedAt: dbModel.deletedAt ? new Date(dbModel.deletedAt) : undefined,
   }),
 
   toDatabase: (domainModel: User) => ({
@@ -33,4 +33,32 @@ export const userMapper: RepositoryMapper<typeof usersTable, User> = {
       ? domainModel.deletedAt.toISOString()
       : null,
   }),
+
+  toDatabasePartial: (
+    domainModel: Partial<User>
+  ): Partial<InferSelectModel<typeof usersTable>> => {
+    const dbModel: Partial<InferSelectModel<typeof usersTable>> = {};
+    if (domainModel.id !== undefined) dbModel.id = domainModel.id;
+    if (domainModel.name !== undefined) dbModel.name = domainModel.name;
+    if (domainModel.email !== undefined) dbModel.email = domainModel.email;
+    if (domainModel.username !== undefined)
+      dbModel.username = domainModel.username;
+    if (domainModel.password !== undefined)
+      dbModel.password = domainModel.password;
+    if (domainModel.balance !== undefined)
+      dbModel.balance = domainModel.balance;
+    if (domainModel.inAnalysis !== undefined)
+      dbModel.inAnalysis = domainModel.inAnalysis ? "true" : "false";
+    if (domainModel.createdAt !== undefined)
+      dbModel.createdAt = domainModel.createdAt.toISOString();
+    if (domainModel.updatedAt !== undefined)
+      dbModel.updatedAt = domainModel.updatedAt
+        ? domainModel.updatedAt.toISOString()
+        : null;
+    if (domainModel.deletedAt !== undefined)
+      dbModel.deletedAt = domainModel.deletedAt
+        ? domainModel.deletedAt.toISOString()
+        : null;
+    return dbModel;
+  },
 };

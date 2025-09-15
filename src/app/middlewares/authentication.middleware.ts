@@ -1,11 +1,11 @@
-import { getUserById } from "@/infra/database/repository/user.repository.ts";
 import jwt from "jsonwebtoken";
 import {
   goNext,
   unauthorized,
   type HttpMiddlewareResponseContract,
   type HttpRequestContract,
-} from "../contracts/http.protocol.ts";
+} from "../contracts/http.contract.ts";
+import { userRepository } from "@/infra/database/repository/user.repository.ts";
 
 export const authenticationMiddleware = async ({
   headers,
@@ -30,7 +30,7 @@ export const authenticationMiddleware = async ({
       return unauthorized("Unauthorized");
     }
 
-    if (!(await getUserById(decoded.sub))) {
+    if (!(await userRepository.getUserById(decoded.sub))) {
       return unauthorized("Unauthorized");
     }
 

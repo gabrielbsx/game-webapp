@@ -15,8 +15,8 @@ export const paymentMapper: RepositoryMapper<typeof paymentsTable, Payment> = {
     paymentProviderReferenceId: dbModel.paymentProviderReferenceId ?? null,
     processedAt: dbModel.processedAt ? new Date(dbModel.processedAt) : null,
     createdAt: new Date(dbModel.createdAt),
-    updatedAt: dbModel.updatedAt ? new Date(dbModel.updatedAt) : null,
-    deletedAt: dbModel.deletedAt ? new Date(dbModel.deletedAt) : null,
+    updatedAt: dbModel.updatedAt ? new Date(dbModel.updatedAt) : undefined,
+    deletedAt: dbModel.deletedAt ? new Date(dbModel.deletedAt) : undefined,
   }),
 
   toDatabase: (domainModel: Payment) => ({
@@ -39,4 +39,38 @@ export const paymentMapper: RepositoryMapper<typeof paymentsTable, Payment> = {
       ? domainModel.deletedAt.toISOString()
       : null,
   }),
+
+  toDatabasePartial: (
+    domainModel: Partial<Payment>
+  ): Partial<InferSelectModel<typeof paymentsTable>> => {
+    const dbModel: Partial<InferSelectModel<typeof paymentsTable>> = {};
+    if (domainModel.id !== undefined) dbModel.id = domainModel.id;
+    if (domainModel.amount !== undefined) dbModel.amount = domainModel.amount;
+    if (domainModel.currency !== undefined)
+      dbModel.currency = domainModel.currency;
+    if (domainModel.status !== undefined) dbModel.status = domainModel.status;
+    if (domainModel.userId !== undefined) dbModel.userId = domainModel.userId;
+    if (domainModel.externalReference !== undefined)
+      dbModel.externalReference = domainModel.externalReference;
+    if (domainModel.paymentProviderReferenceId !== undefined)
+      dbModel.paymentProviderReferenceId =
+        domainModel.paymentProviderReferenceId ?? null;
+    if (domainModel.underAntifraudReview !== undefined)
+      dbModel.underAntifraudReview = domainModel.underAntifraudReview;
+    if (domainModel.processedAt !== undefined)
+      dbModel.processedAt = domainModel.processedAt
+        ? domainModel.processedAt.toISOString()
+        : null;
+    if (domainModel.createdAt !== undefined)
+      dbModel.createdAt = domainModel.createdAt.toISOString();
+    if (domainModel.updatedAt !== undefined)
+      dbModel.updatedAt = domainModel.updatedAt
+        ? domainModel.updatedAt.toISOString()
+        : null;
+    if (domainModel.deletedAt !== undefined)
+      dbModel.deletedAt = domainModel.deletedAt
+        ? domainModel.deletedAt.toISOString()
+        : null;
+    return dbModel;
+  },
 };

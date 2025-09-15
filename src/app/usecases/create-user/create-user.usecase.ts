@@ -1,4 +1,3 @@
-import bcrypt from "bcrypt";
 import { validateDto } from "@/shared/utilities/validate-dto.ts";
 import { type CreateUserDto } from "./create-user.dto.ts";
 import { createUserSchemaValidation } from "./create-user.validation.ts";
@@ -8,19 +7,9 @@ import {
   created,
   type HttpRequestContract,
   type HttpResponseContract,
-} from "@/app/contracts/http.protocol.ts";
+} from "@/app/contracts/http.contract.ts";
 import { userRepository } from "@/infra/database/repository/user.repository.ts";
-import { randomUUID } from "crypto";
-
-const makeUser = (data: CreateUserDto) => ({
-  ...data,
-  id: randomUUID(),
-  balance: 0,
-  inAnalysis: false,
-  createdAt: new Date(),
-  deletedAt: null,
-  updatedAt: null,
-});
+import { cryptography } from "@/infra/cryptography/bcrypt.cryptography.ts";
 
 export const createUser = async ({
   request,
@@ -37,18 +26,16 @@ export const createUser = async ({
     return badRequest("Account already exists");
   }
 
-  const salt = await bcrypt.genSalt();
+  const passwordHashed = await cryptography.hash(password);
 
-  const passwordHashed = await bcrypt.hash(password, salt);
-
-  const userCreated = await userRepository.create(
-    makeUser({
-      name,
-      email,
-      username,
-      password: passwordHashed,
-    })
-  );
+  const userCreated = await userRepository.create({
+    name,
+    email,
+    username,
+    password: passwordHashed,
+    balance: 0,
+    inAnalysis: false,
+  });
 
   return created({ id: userCreated.id });
 };

@@ -1,7 +1,7 @@
 import type {
   HttpRequestContract,
   HttpResponseContract,
-} from "@/app/contracts/http.protocol.ts";
+} from "@/app/contracts/http.contract.ts";
 import type { FastifyReply, FastifyRequest } from "fastify";
 
 export const fastifyControllerWrapper =

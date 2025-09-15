@@ -1,7 +1,10 @@
 import type { AnySQLiteColumn, SQLiteTable } from "drizzle-orm/sqlite-core";
 import { db } from "../db.ts";
 import { eq, type InferInsertModel, type InferSelectModel } from "drizzle-orm";
-import type { RepositoryContract } from "@/core/contracts/repository.protocol.ts";
+import type {
+  IgnorableKeys,
+  RepositoryContract,
+} from "@/core/contracts/repository.protocol.ts";
 
 type CustomSQLiteTable = SQLiteTable & {
   id: AnySQLiteColumn;
@@ -13,6 +16,9 @@ type CustomSQLiteTable = SQLiteTable & {
 export type RepositoryMapper<TTable extends CustomSQLiteTable, TEntity> = {
   toEntity: (data: InferSelectModel<TTable>) => TEntity;
   toDatabase: (entity: TEntity) => InferInsertModel<TTable>;
+  toDatabasePartial: (
+    entity: Partial<TEntity>
+  ) => Partial<InferInsertModel<TTable>>;
 };
 
 export const makeRepository = <
@@ -23,8 +29,8 @@ export const makeRepository = <
   schema: TTable,
   mapper: RepositoryMapper<TTable, TEntity>
 ): RepositoryContract<TEntity, TId> => ({
-  async create(data: TEntity): Promise<TEntity> {
-    const dbData = mapper.toDatabase(data);
+  async create(data: Omit<TEntity, IgnorableKeys>): Promise<TEntity> {
+    const dbData = mapper.toDatabase(data as TEntity);
     const record = await db.insert(schema).values(dbData).returning().get();
 
     if (!record) throw new Error("Failed to create record");
@@ -44,8 +50,8 @@ export const makeRepository = <
     return mapper.toEntity(record as InferSelectModel<TTable>);
   },
 
-  async update(id: TId, data: TEntity): Promise<TEntity> {
-    const dbData = mapper.toDatabase(data);
+  async update(id: TId, data: Partial<TEntity>): Promise<TEntity> {
+    const dbData = mapper.toDatabasePartial(data);
 
     const record = await db
       .update(schema)

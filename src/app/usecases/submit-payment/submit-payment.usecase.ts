@@ -5,7 +5,7 @@ import {
   ok,
   type HttpRequestContract,
   type HttpResponseContract,
-} from "@/app/contracts/http.protocol.ts";
+} from "@/app/contracts/http.contract.ts";
 
 export const submitPayment = async ({
   request,

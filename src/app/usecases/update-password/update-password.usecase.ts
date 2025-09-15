@@ -1,19 +1,16 @@
 import { validateDto } from "@/shared/utilities/validate-dto.ts";
 import { updatePasswordSchemaValidation } from "./update-password.validation.ts";
 import type { UpdatePasswordDto } from "./update-password.dto.ts";
-import { db } from "@/infra/database/db.ts";
-import { usersTable } from "@/infra/database/schema/user.schema.ts";
-import { eq } from "drizzle-orm";
-import bcrypt from "bcrypt";
 import {
   conflict,
   noContent,
   notFound,
   type HttpRequestContract,
   type HttpResponseContract,
-} from "@/app/contracts/http.protocol.ts";
+} from "@/app/contracts/http.contract.ts";
 import { isUsernameExistsInGame } from "@/core/behavior/is-username-exists-ingame.ts";
 import { userRepository } from "@/infra/database/repository/user.repository.ts";
+import { cryptography } from "@/infra/cryptography/bcrypt.cryptography.ts";
 
 export const updatePassword = async ({
   request,
@@ -36,9 +33,9 @@ export const updatePassword = async ({
     return conflict("An error occurred");
   }
 
-  const passwordHashed = await bcrypt.hash(password, await bcrypt.genSalt());
+  const passwordHashed = await cryptography.hash(password);
 
-  const isCurrentPasswordValid = await bcrypt.compare(
+  const isCurrentPasswordValid = await cryptography.compare(
     currentPassword,
     user.password
   );
@@ -47,10 +44,9 @@ export const updatePassword = async ({
     return conflict("An error occurred");
   }
 
-  await db
-    .update(usersTable)
-    .set({ password: passwordHashed })
-    .where(eq(usersTable.id, user.id));
+  await userRepository.update(user.id, {
+    password: passwordHashed,
+  });
 
   return noContent();
 };

@@ -10,7 +10,7 @@ import {
   ok,
   type HttpRequestContract,
   type HttpResponseContract,
-} from "@/app/contracts/http.protocol.ts";
+} from "@/app/contracts/http.contract.ts";
 import { PaymentStatus } from "@/core/entity/payment.ts";
 import { AntifraudStatus } from "@/core/entity/antifraud.ts";
 import { paymentRepository } from "@/infra/database/repository/payment.repository.ts";
@@ -57,15 +57,11 @@ export const incomingPayment = async ({
     });
 
     await antifraudRepository.create({
-      id: randomUUID(),
       paymentId: payment.id,
       status: AntifraudStatus.REJECTED,
       reviewedAt: new Date(),
       reviewedBy: "system",
       reason: "Refunded payment",
-      createdAt: new Date(),
-      updatedAt: null,
-      deletedAt: null,
     });
 
     await userRepository.update(payment.userId, {
@@ -89,7 +85,6 @@ export const incomingPayment = async ({
     [PaymentStatus.REFUNDED]: async () => {
       // TODO: antifraud
       await paymentRepository.update(payment.id, {
-        ...payment,
         status: PaymentStatus.REFUNDED,
         underAntifraudReview: true,
         updatedAt: new Date(),
@@ -103,14 +98,12 @@ export const incomingPayment = async ({
       writeFileSync(importCash, `${user.username} ${payment.amount}`);
 
       await paymentRepository.update(payment.id, {
-        ...payment,
         status: PaymentStatus.COMPLETED,
         updatedAt: new Date(),
       });
     },
     [PaymentStatus.FAILED]: async () =>
       paymentRepository.update(payment.id, {
-        ...payment,
         status: PaymentStatus.FAILED,
         updatedAt: new Date(),
       }),
