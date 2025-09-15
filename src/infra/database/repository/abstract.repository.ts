@@ -4,7 +4,7 @@ import { eq, type InferInsertModel, type InferSelectModel } from "drizzle-orm";
 import type {
   IgnorableKeys,
   RepositoryContract,
-} from "@/core/contracts/repository.protocol.ts";
+} from "@/core/contracts/repository.contract.ts";
 
 type CustomSQLiteTable = SQLiteTable & {
   id: AnySQLiteColumn;
