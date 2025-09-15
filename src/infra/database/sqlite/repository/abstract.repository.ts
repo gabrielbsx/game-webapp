@@ -1,10 +1,10 @@
 import type { AnySQLiteColumn, SQLiteTable } from "drizzle-orm/sqlite-core";
-import { db } from "../db.ts";
 import { eq, type InferInsertModel, type InferSelectModel } from "drizzle-orm";
 import type {
   IgnorableKeys,
   RepositoryContract,
 } from "@/core/contracts/repository.contract.ts";
+import { db } from "../db.ts";
 
 type CustomSQLiteTable = SQLiteTable & {
   id: AnySQLiteColumn;
@@ -46,6 +46,18 @@ export const makeRepository = <
       .get();
 
     if (!record) return null;
+
+    return mapper.toEntity(record as InferSelectModel<TTable>);
+  },
+
+  async findByIdOrThrow(id: TId): Promise<TEntity> {
+    const record = await db
+      .select()
+      .from(schema)
+      .where(eq(schema.id, id))
+      .get();
+
+    if (!record) throw new Error("Record not found");
 
     return mapper.toEntity(record as InferSelectModel<TTable>);
   },

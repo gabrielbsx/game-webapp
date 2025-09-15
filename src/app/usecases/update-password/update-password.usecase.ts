@@ -4,7 +4,6 @@ import type { UpdatePasswordDto } from "./update-password.dto.ts";
 import {
   conflict,
   noContent,
-  notFound,
   type HttpRequestContract,
   type HttpResponseContract,
 } from "@/app/contracts/http.contract.ts";
@@ -23,11 +22,7 @@ export const updatePassword = async ({
     updatePasswordSchemaValidation
   );
 
-  const user = await userRepository.getUserById(userId);
-
-  if (!user) {
-    return notFound("User not found");
-  }
+  const user = await userRepository.findByIdOrThrow(userId);
 
   if (!gameAccountRepository.isUsernameExists(user.username)) {
     return conflict("An error occurred");

@@ -1,5 +1,4 @@
 import {
-  badRequest,
   ok,
   type HttpRequestContract,
   type HttpResponseContract,
@@ -12,11 +11,7 @@ export const getUserBalance = async ({
 }: HttpRequestContract): Promise<HttpResponseContract> => {
   const { id: userId } = authenticatedUser!;
 
-  const user = await userRepository.getUserById(userId);
-
-  if (!user) {
-    return badRequest("User not found");
-  }
+  const user = await userRepository.findByIdOrThrow(userId);
 
   const { balance } = user;
 

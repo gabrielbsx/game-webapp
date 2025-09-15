@@ -1,8 +1,6 @@
 import { validateDto } from "@/infra/validation/validate-dto.ts";
 import { type IncomingPaymentDto } from "./incoming-payment.dto.ts";
 import { incomingPaymentSchemaValidation } from "./incoming-payment.validation.ts";
-import { writeFileSync } from "fs";
-import { randomUUID } from "crypto";
 import {
   conflict,
   notFound,
@@ -25,19 +23,11 @@ export const incomingPayment = async ({
     incomingPaymentSchemaValidation
   );
 
-  const payment = await paymentRepository.findById(
+  const payment = await paymentRepository.findByIdOrThrow(
     incomingPaymentDto.externalReference
   );
 
-  if (!payment) {
-    return notFound("Payment not found");
-  }
-
-  const user = await userRepository.findById(payment.userId);
-
-  if (!user) {
-    return notFound("User not found");
-  }
+  const user = await userRepository.findByIdOrThrow(payment.userId);
 
   if (payment.underAntifraudReview) {
     return conflict("Payment under antifraud review");
@@ -48,27 +38,7 @@ export const incomingPayment = async ({
     incomingPaymentDto.status === PaymentStatus.REFUNDED
   ) {
     // TODO: antifraud
-
-    await paymentRepository.update(payment.id, {
-      ...payment,
-      status: PaymentStatus.REFUNDED,
-      underAntifraudReview: true,
-      updatedAt: new Date(),
-    });
-
-    await antifraudRepository.create({
-      paymentId: payment.id,
-      status: AntifraudStatus.REJECTED,
-      reviewedAt: new Date(),
-      reviewedBy: "system",
-      reason: "Refunded payment",
-    });
-
-    await userRepository.update(payment.userId, {
-      inAnalysis: true,
-      updatedAt: new Date(),
-    });
-
+    await handleAntifraud(payment.id, user.id);
     return ok("Payment refunded");
   }
 
@@ -81,27 +51,10 @@ export const incomingPayment = async ({
   }
 
   const behavior = {
-    [PaymentStatus.PENDING]: async () => null,
-    [PaymentStatus.REFUNDED]: async () => {
-      // TODO: antifraud
-      await paymentRepository.update(payment.id, {
-        status: PaymentStatus.REFUNDED,
-        underAntifraudReview: true,
-        updatedAt: new Date(),
-      });
-    },
-    [PaymentStatus.COMPLETED]: async () => {
-      const importCash = `${
-        process.env.GAME_IMPORT_CASH_PATH
-      }/${randomUUID()}.txt`;
+    [PaymentStatus.REFUNDED]: () => handleAntifraud(payment.id, user.id),
+    [PaymentStatus.COMPLETED]: () =>
+      completePayment(payment.id, user.username, payment.amount),
 
-      writeFileSync(importCash, `${user.username} ${payment.amount}`);
-
-      await paymentRepository.update(payment.id, {
-        status: PaymentStatus.COMPLETED,
-        updatedAt: new Date(),
-      });
-    },
     [PaymentStatus.FAILED]: async () =>
       paymentRepository.update(payment.id, {
         status: PaymentStatus.FAILED,
@@ -116,4 +69,38 @@ export const incomingPayment = async ({
   }
 
   return ok("Payment verified");
+};
+
+const completePayment = async (
+  paymentId: string,
+  username: string,
+  amount: number
+) => {
+  await gameAccountRepository.addCash(username, amount);
+
+  await paymentRepository.update(paymentId, {
+    status: PaymentStatus.COMPLETED,
+    updatedAt: new Date(),
+  });
+};
+
+const handleAntifraud = async (paymentId: string, userId: string) => {
+  await paymentRepository.update(paymentId, {
+    status: PaymentStatus.REFUNDED,
+    underAntifraudReview: true,
+    updatedAt: new Date(),
+  });
+
+  await antifraudRepository.create({
+    paymentId: paymentId,
+    status: AntifraudStatus.REJECTED,
+    reviewedAt: new Date(),
+    reviewedBy: "system",
+    reason: "Refunded payment",
+  });
+
+  await userRepository.update(userId, {
+    inAnalysis: true,
+    updatedAt: new Date(),
+  });
 };
