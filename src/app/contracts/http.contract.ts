@@ -35,31 +35,6 @@ export const noContent = () => ({
   data: null,
 });
 
-export const badRequest = (message: string) => ({
-  statusCode: 400,
-  data: { error: message },
-});
-
-export const unauthorized = (message: string) => ({
-  statusCode: 401,
-  data: { error: message },
-});
-
-export const notFound = (message: string) => ({
-  statusCode: 404,
-  data: { error: message },
-});
-
-export const conflict = (message: string) => ({
-  statusCode: 409,
-  data: { error: message },
-});
-
-export const internalServerError = (message: string) => ({
-  statusCode: 500,
-  data: { error: message },
-});
-
 export const goNext = () => ({ next: true } as const);
 
 export const isGoNext = (

@@ -2,8 +2,6 @@ import { validateDto } from "@/infra/validation/validate-dto.ts";
 import { type IncomingPaymentDto } from "./incoming-payment.dto.ts";
 import { incomingPaymentSchemaValidation } from "./incoming-payment.validation.ts";
 import {
-  conflict,
-  notFound,
   ok,
   type HttpRequestContract,
   type HttpResponseContract,
@@ -14,6 +12,10 @@ import { antifraudRepository } from "@/infra/database/repository/antifraud.repos
 import { userRepository } from "@/infra/database/repository/user.repository.ts";
 import { paymentRepository } from "@/infra/database/sqlite/repository/payment.repository.ts";
 import { gameAccountRepository } from "@/infra/database/fs/repository/game-account.repository.ts";
+import { PaymentAlreadyProcessedException } from "@/core/errors/payment-already-processed.exception.ts";
+import { PaymentAmountMismatchException } from "@/core/errors/payment-amount-mismatch.exception.ts";
+import { GameAccountNotFoundException } from "@/core/errors/game-account-not-found.exception.ts";
+import { PaymentUnderAntifraudReviewException } from "@/core/errors/payment-under-antifraud-review.exception.ts";
 
 export const incomingPayment = async ({
   request,
@@ -23,14 +25,14 @@ export const incomingPayment = async ({
     incomingPaymentSchemaValidation
   );
 
-  const payment = await paymentRepository.findByIdOrThrow(
+  const payment = await paymentRepository.findByExternalReferenceOrThrow(
     incomingPaymentDto.externalReference
   );
 
   const user = await userRepository.findByIdOrThrow(payment.userId);
 
   if (payment.underAntifraudReview) {
-    return conflict("Payment under antifraud review");
+    throw new PaymentUnderAntifraudReviewException();
   }
 
   if (
@@ -43,11 +45,11 @@ export const incomingPayment = async ({
   }
 
   if (payment.status !== PaymentStatus.PENDING) {
-    return conflict("Payment already processed");
+    throw new PaymentAlreadyProcessedException();
   }
 
   if (payment.amount !== incomingPaymentDto.amount) {
-    return conflict("Payment amount mismatch");
+    throw new PaymentAmountMismatchException();
   }
 
   const behavior = {
@@ -65,7 +67,7 @@ export const incomingPayment = async ({
   await behavior[payment.status as keyof typeof behavior]();
 
   if (!(await gameAccountRepository.isUsernameExists(user.username))) {
-    return notFound("User not found in game");
+    throw new GameAccountNotFoundException();
   }
 
   return ok("Payment verified");

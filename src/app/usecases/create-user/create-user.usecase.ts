@@ -2,7 +2,6 @@ import { validateDto } from "@/infra/validation/validate-dto.ts";
 import { type CreateUserDto } from "./create-user.dto.ts";
 import { createUserSchemaValidation } from "./create-user.validation.ts";
 import {
-  badRequest,
   created,
   type HttpRequestContract,
   type HttpResponseContract,
@@ -10,6 +9,7 @@ import {
 import { userRepository } from "@/infra/database/repository/user.repository.ts";
 import { cryptography } from "@/infra/cryptography/bcrypt.cryptography.ts";
 import { gameAccountRepository } from "@/infra/database/fs/repository/game-account.repository.ts";
+import { AccountAlreadyExistsException } from "@/core/errors/account-already-exists.exception.ts";
 
 export const createUser = async ({
   request,
@@ -23,7 +23,7 @@ export const createUser = async ({
     (await gameAccountRepository.isUsernameExists(username)) ||
     (await userRepository.getUserByUsername(username))
   ) {
-    return badRequest("Account already exists");
+    throw new AccountAlreadyExistsException();
   }
 
   const passwordHashed = await cryptography.hash(password);

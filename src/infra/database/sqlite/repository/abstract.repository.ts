@@ -5,6 +5,8 @@ import type {
   RepositoryContract,
 } from "@/core/contracts/repository.contract.ts";
 import { db } from "../db.ts";
+import { InternalErrorException } from "@/core/errors/generic/internal-error.exception.ts";
+import { NotFoundException } from "@/core/errors/generic/not-found.exception.ts";
 
 type CustomSQLiteTable = SQLiteTable & {
   id: AnySQLiteColumn;
@@ -57,7 +59,7 @@ export const makeRepository = <
       .where(eq(schema.id, id))
       .get();
 
-    if (!record) throw new Error("Record not found");
+    if (!record) throw new NotFoundException("Record not found");
 
     return mapper.toEntity(record as InferSelectModel<TTable>);
   },
@@ -75,7 +77,7 @@ export const makeRepository = <
       .returning()
       .get();
 
-    if (!record) throw new Error("Failed to update record");
+    if (!record) throw new InternalErrorException("Failed to update record");
 
     return mapper.toEntity(record as InferSelectModel<TTable>);
   },
