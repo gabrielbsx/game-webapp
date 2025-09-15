@@ -1,7 +1,6 @@
-import { validateDto } from "@/shared/utilities/validate-dto.ts";
+import { validateDto } from "@/infra/validation/validate-dto.ts";
 import { type IncomingPaymentDto } from "./incoming-payment.dto.ts";
 import { incomingPaymentSchemaValidation } from "./incoming-payment.validation.ts";
-import { isUsernameExistsInGame } from "@/core/behavior/is-username-exists-ingame.ts";
 import { writeFileSync } from "fs";
 import { randomUUID } from "crypto";
 import {
@@ -13,9 +12,10 @@ import {
 } from "@/app/contracts/http.contract.ts";
 import { PaymentStatus } from "@/core/entity/payment.ts";
 import { AntifraudStatus } from "@/core/entity/antifraud.ts";
-import { paymentRepository } from "@/infra/database/repository/payment.repository.ts";
 import { antifraudRepository } from "@/infra/database/repository/antifraud.repository.ts";
 import { userRepository } from "@/infra/database/repository/user.repository.ts";
+import { paymentRepository } from "@/infra/database/sqlite/repository/payment.repository.ts";
+import { gameAccountRepository } from "@/infra/database/fs/repository/game-account.repository.ts";
 
 export const incomingPayment = async ({
   request,
@@ -111,7 +111,7 @@ export const incomingPayment = async ({
 
   await behavior[payment.status as keyof typeof behavior]();
 
-  if (!isUsernameExistsInGame(user.username)) {
+  if (!(await gameAccountRepository.isUsernameExists(user.username))) {
     return notFound("User not found in game");
   }
 

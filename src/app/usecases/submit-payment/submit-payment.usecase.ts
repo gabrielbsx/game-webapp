@@ -1,4 +1,4 @@
-import { validateDto } from "@/shared/utilities/validate-dto.ts";
+import { validateDto } from "@/infra/validation/validate-dto.ts";
 import { type SubmitPaymentDto } from "./submit-payment.dto.ts";
 import { submitPaymentSchemaValidation } from "./submit-payment.validation.ts";
 import {

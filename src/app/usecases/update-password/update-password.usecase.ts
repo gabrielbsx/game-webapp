@@ -1,4 +1,4 @@
-import { validateDto } from "@/shared/utilities/validate-dto.ts";
+import { validateDto } from "@/infra/validation/validate-dto.ts";
 import { updatePasswordSchemaValidation } from "./update-password.validation.ts";
 import type { UpdatePasswordDto } from "./update-password.dto.ts";
 import {
@@ -8,9 +8,9 @@ import {
   type HttpRequestContract,
   type HttpResponseContract,
 } from "@/app/contracts/http.contract.ts";
-import { isUsernameExistsInGame } from "@/core/behavior/is-username-exists-ingame.ts";
 import { userRepository } from "@/infra/database/repository/user.repository.ts";
 import { cryptography } from "@/infra/cryptography/bcrypt.cryptography.ts";
+import { gameAccountRepository } from "@/infra/database/fs/repository/game-account.repository.ts";
 
 export const updatePassword = async ({
   request,
@@ -29,7 +29,7 @@ export const updatePassword = async ({
     return notFound("User not found");
   }
 
-  if (!isUsernameExistsInGame(user.username)) {
+  if (!gameAccountRepository.isUsernameExists(user.username)) {
     return conflict("An error occurred");
   }
 
