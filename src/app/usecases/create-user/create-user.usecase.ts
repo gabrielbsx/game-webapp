@@ -29,8 +29,6 @@ export const createUser = async ({
     email,
     username,
     password: passwordHashed,
-    balance: 0,
-    inAnalysis: false,
   });
 
   return created({ id: userCreated.id });

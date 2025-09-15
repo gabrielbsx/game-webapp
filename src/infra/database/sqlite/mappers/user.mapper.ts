@@ -1,5 +1,5 @@
 import type { User } from "@/core/entity/user.ts";
-import type { InferSelectModel } from "drizzle-orm";
+import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 import type { usersTable } from "../schema/user.schema.ts";
 import type { RepositoryMapper } from "../repository/abstract.repository.ts";
 
@@ -17,7 +17,7 @@ export const userMapper: RepositoryMapper<typeof usersTable, User> = {
     deletedAt: dbModel.deletedAt ? new Date(dbModel.deletedAt) : undefined,
   }),
 
-  toDatabase: (domainModel: User) => ({
+  toDatabase: (domainModel: User): InferInsertModel<typeof usersTable> => ({
     id: domainModel.id,
     name: domainModel.name,
     email: domainModel.email,

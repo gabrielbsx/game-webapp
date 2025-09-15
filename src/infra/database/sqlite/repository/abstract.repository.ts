@@ -24,14 +24,15 @@ export type RepositoryMapper<TTable extends CustomSQLiteTable, TEntity> = {
 };
 
 export const makeRepository = <
-  TTable extends CustomSQLiteTable,
-  TId = string,
-  TEntity = unknown
+  TEntity,
+  IgnorableEntityKeys extends keyof TEntity = IgnorableKeys<TEntity>,
+  TTable extends CustomSQLiteTable = CustomSQLiteTable,
+  TId = string
 >(
   schema: TTable,
   mapper: RepositoryMapper<TTable, TEntity>
-): RepositoryContract<TEntity, TId> => ({
-  async create(data: Omit<TEntity, IgnorableKeys>): Promise<TEntity> {
+): RepositoryContract<TEntity, IgnorableEntityKeys, TId> => ({
+  async create(data: Omit<TEntity, IgnorableEntityKeys>): Promise<TEntity> {
     const dbData = mapper.toDatabase(data as TEntity);
     const record = await db.insert(schema).values(dbData).returning().get();
 
