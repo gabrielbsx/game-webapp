@@ -3,7 +3,7 @@ import {
   type HttpRequestContract,
   type HttpResponseContract,
 } from "@/app/contracts/http.contract.ts";
-import { userRepository } from "@/infra/database/repository/user.repository.ts";
+import { userRepository } from "@/infra/database/sqlite/repository/user.repository.ts";
 
 export const getUserBalance = async ({
   // request,

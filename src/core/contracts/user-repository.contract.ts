@@ -1,4 +1,4 @@
-import type { User } from "../entity/user.ts";
+import type { User } from "../entities/user.ts";
 import type {
   ExtendableIgnorableKeys,
   RepositoryContract,

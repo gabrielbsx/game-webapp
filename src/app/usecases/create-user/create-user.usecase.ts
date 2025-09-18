@@ -4,10 +4,10 @@ import {
   type HttpRequestContract,
   type HttpResponseContract,
 } from "@/app/contracts/http.contract.ts";
-import { userRepository } from "@/infra/database/repository/user.repository.ts";
 import { cryptography } from "@/infra/cryptography/bcrypt.cryptography.ts";
 import { gameAccountRepository } from "@/infra/database/fs/repository/game-account.repository.ts";
 import { AccountAlreadyExistsException } from "@/core/errors/account-already-exists.exception.ts";
+import { userRepository } from "@/infra/database/sqlite/repository/user.repository.ts";
 
 export const createUser = async ({
   request,

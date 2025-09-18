@@ -1,4 +1,4 @@
-import type { Payment } from "../entity/payment.ts";
+import type { Payment } from "../entities/payment.ts";
 import type { RepositoryContract } from "./repository.contract.ts";
 
 export type PaymentRepositoryContract = {
