@@ -1,7 +1,7 @@
-import type { Antifraud } from "@/core/entity/antifraud.ts";
 import type { InferSelectModel } from "drizzle-orm";
 import type { RepositoryMapper } from "../repository/abstract.repository.ts";
 import type { antifraudTable } from "../schema/antifraud.schema.ts";
+import type { Antifraud } from "@/core/entities/antifraud.ts";
 
 export const antifraudMapper: RepositoryMapper<
   typeof antifraudTable,

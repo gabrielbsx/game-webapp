@@ -1,7 +1,7 @@
 import type { InferSelectModel } from "drizzle-orm";
 import type { RepositoryMapper } from "../repository/abstract.repository.ts";
 import type { paymentsTable } from "../schema/payment.schema.ts";
-import type { Payment } from "@/core/entity/payment.ts";
+import type { Payment } from "@/core/entities/payment.ts";
 
 export const paymentMapper: RepositoryMapper<typeof paymentsTable, Payment> = {
   toEntity: (dbModel: InferSelectModel<typeof paymentsTable>): Payment => ({

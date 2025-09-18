@@ -1,7 +1,7 @@
-import type { User } from "@/core/entity/user.ts";
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 import type { usersTable } from "../schema/user.schema.ts";
 import type { RepositoryMapper } from "../repository/abstract.repository.ts";
+import type { User } from "@/core/entities/user.ts";
 
 export const userMapper: RepositoryMapper<typeof usersTable, User> = {
   toEntity: (dbModel: InferSelectModel<typeof usersTable>): User => ({

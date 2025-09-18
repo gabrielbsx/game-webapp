@@ -3,7 +3,7 @@ import { relations } from "drizzle-orm";
 import { sqliteTable, text, real, int } from "drizzle-orm/sqlite-core";
 import { usersTable } from "./user.schema.ts";
 import { antifraudTable } from "./antifraud.schema.ts";
-import type { PaymentStatusType } from "@/core/entity/payment.ts";
+import type { PaymentStatusType } from "@/core/entities/payment.ts";
 
 export const paymentsTable = sqliteTable("payments", {
   id: text("id")
